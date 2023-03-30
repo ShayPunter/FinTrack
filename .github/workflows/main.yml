@@ -43,6 +43,9 @@ jobs:
           php artisan key:generate
           php artisan migrate
 
+      - name: Set write permissions for build directory
+        run: sudo chmod -R 777 public/build
+
       - name: Run NPM Build
         run: npm run build
 
