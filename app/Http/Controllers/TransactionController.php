@@ -61,7 +61,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        return response()->json($transaction);
     }
 
     /**
@@ -69,7 +69,7 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        // nothing yet
     }
 
     /**
@@ -77,7 +77,19 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        $request->validate([
+            'name' =>'string|required',
+            'category' =>'string',
+            'amount' => 'decimal:0,4|required'
+        ]);
+
+        $transaction->name = $request->name;
+        $transaction->category = $request->category;
+        $transaction->amount = $request->amount;
+        $transaction->save();
+
+        return response()->json('Record updated');
+
     }
 
     /**
@@ -85,6 +97,8 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+
+        return response()->json('Record deleted');
     }
 }
