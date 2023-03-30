@@ -38,6 +38,7 @@ class TransactionController extends Controller
             // todo: add some form of intelligent processing to auto-categorise transactions
             $transaction = new Transaction();
             $transaction->name = $request->name;
+            $transaction->user = $request->user()->id;
 
             if ($request->category == null) {
                 $transaction->category = 'undefined';
