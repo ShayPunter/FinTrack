@@ -15,10 +15,13 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout code
@@ -31,6 +34,12 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run NPM Build
+        run: npm run build
 
       - name: Prepare Laravel Application
         run: |
