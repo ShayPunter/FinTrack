@@ -41,6 +41,15 @@ jobs:
       - name: Run NPM Build
         run: npm run build
 
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}
+          do
+            nc -z 127.0.0.1 3306 && echo Success && break
+            echo -n .
+            sleep 1
+          done
+
       - name: Prepare Laravel Application
         run: |
           cp .env.ci .env
