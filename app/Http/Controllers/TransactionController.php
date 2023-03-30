@@ -31,10 +31,8 @@ class TransactionController extends Controller
         $request->validate([
             'name' => 'string|required',
             'category' => 'string',
-            'amount' => 'decimal:0,4|required'
+            'amount' => 'decimal:0,4|required',
         ]);
-
-
 
         try {
             // todo: add some form of intelligent processing to auto-categorise transactions
@@ -78,9 +76,9 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         $request->validate([
-            'name' =>'string|required',
-            'category' =>'string',
-            'amount' => 'decimal:0,4|required'
+            'name' => 'string|required',
+            'category' => 'string',
+            'amount' => 'decimal:0,4|required',
         ]);
 
         $transaction->name = $request->name;
@@ -89,7 +87,6 @@ class TransactionController extends Controller
         $transaction->save();
 
         return response()->json('Record updated');
-
     }
 
     /**
