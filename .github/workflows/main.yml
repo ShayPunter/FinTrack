@@ -12,25 +12,24 @@ env:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.2
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0.31
         env:
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: test
         ports:
-          - 3306:3306
+          - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          fetch-depth: 1
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
@@ -38,23 +37,14 @@ jobs:
       - name: Install NPM dependencies
         run: npm ci
 
-      - name: Run NPM Build
-        run: npm run build
-
-      - name: Wait for MySQL
-        run: |
-          for i in {1..30}
-          do
-            nc -z 127.0.0.1 3306 && echo Success && break
-            echo -n .
-            sleep 1
-          done
-
       - name: Prepare Laravel Application
         run: |
           cp .env.ci .env
           php artisan key:generate
           php artisan migrate
+
+      - name: Run NPM Build
+        run: npm run build
 
       - name: Run PHPUnit Tests
         run: vendor/bin/phpunit tests/
